@@ -4,149 +4,80 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>To-Do list app</title>
+        <title>To-Do List</title>
 
-        <style>
-            /* CSS */
-            .button-4 {
-            appearance: none;
-            background-color: #FAFBFC;
-            border: 1px solid rgba(27, 31, 35, 0.15);
-            border-radius: 5px;
-            box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
-            box-sizing: border-box;
-            color: #24292E;
-            cursor: pointer;
-            display: inline-block;
-            font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            font-size: 12px;
-            font-weight: 500;
-            line-height: 20px;
-            list-style: none;
-            padding: 3px 9px;
-            position: relative;
-            transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            vertical-align: middle;
-            white-space: nowrap;
-            word-wrap: break-word;
-            }
-
-            .button-4:hover {
-            background-color: #F3F4F6;
-            text-decoration: none;
-            transition-duration: 0.1s;
-            }
-
-            .button-4:disabled {
-            background-color: #FAFBFC;
-            border-color: rgba(27, 31, 35, 0.15);
-            color: #959DA5;
-            cursor: default;
-            }
-
-            .button-4:active {
-            background-color: #EDEFF2;
-            box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
-            transition: none 0s;
-            }
-
-            .button-4:focus {
-            outline: 1px transparent;
-            }
-
-            .button-4:before {
-            display: none;
-            }
-
-            .button-4:-webkit-details-marker {
-            display: none;
-            }
-
-            label {
-            color: black;
-            font-weight: 600;
-            display: block;
-            }
-
-            input {
-                padding: 3px;
-                box-shadow: 1px 1px 3px black;
-                font-size: 14px;
-                font-weight: 500;
-                width: 160px;
-            }
-
-            p {
-                font-size: 20px;
-                font-weight: 600;
-            }
-        </style>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body style="background: linear-gradient(to right, #ff9966, #ff5e62);">
-        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div>
-                <h1 style="display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-align: center;"> To-Do List </h1> </br>
+    <body>
+        <main class="app">
+            @php
+                $done = $listItems->where('is_complete', 1)->count();
+                $active = $listItems->where('is_complete', 0)->count();
+            @endphp
 
-                <div style="display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-align: center;">
-                    <form method="post" action="{{ route('markAllComplete') }}">
-                        {{ csrf_field() }}
-                        <button class="button-4" type="submit" style="margin-left: 20px; color: green;"> All Complete </button>
-                    </form>
+            <header class="app__header">
+                <h1 class="app__title">To-Do List</h1>
+                <span class="app__counter">{{ $active }} active &middot; {{ $done }} done</span>
+            </header>
 
-                    <form method="post" action="{{ route('markAllIncomplete') }}">
-                        {{ csrf_field() }}
-                        <button class="button-4" type="submit" style="margin-left: 20px; color: orange;"> All Incomplete </button>
-                    </form>
-                </div>
-                
-                @foreach ($listItems as $listItem)
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                        <p style="{{ $listItem->is_complete ? 'text-decoration: line-through; color: gray;' : '' }}">
-                            {{ $listItem->name }}
-                        </p>
+            <div class="toolbar">
+                <form method="post" action="{{ route('markAllComplete') }}">
+                    @csrf
+                    <button class="btn btn--success" type="submit">Mark all done</button>
+                </form>
 
-                        @if ($listItem->is_complete)
-                            <form method="post" action="{{ route('incomplete', $listItem->id) }}">
-                                {{ csrf_field() }}
-                                <button class="button-4" type="submit" style="margin-left: 20px; color: orange;"> Incomplete </button>
-                            </form>
-                        @else
-                            <form method="post" action="{{ route('complete', $listItem->id) }}">
-                                {{ csrf_field() }}
-                                <button class="button-4" type="submit" style="margin-left: 20px; color: green;"> Complete </button>
-                            </form>
-                        @endif
-
-                        <form method="post" action="{{ route('remove', $listItem->id) }}">
-                            {{ csrf_field() }}
-                            <button class="button-4" type="submit" style="margin-left: 20px; color: red;"> Remove </button>
-                        </form>
-                    </div>
-                @endforeach
-                <br>
-
-                <div style="display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-align: center;">
-                    <form method="post" action="{{ route('saveItem') }}">
-                        {{ csrf_field() }}
-                        <label for="listItem"> New Item </label> </br>
-                        <input type="text" name="listItem"> </br>
-                        <button class="button-4" type="submit" style="color: green;"> Save Item </button>
-                    </form>
-                </div>
+                <form method="post" action="{{ route('markAllIncomplete') }}">
+                    @csrf
+                    <button class="btn btn--warning" type="submit">Mark all active</button>
+                </form>
             </div>
-        </div>
+
+            <ul class="list">
+                @forelse ($listItems as $listItem)
+                    @php $isDone = $listItem->is_complete == 1; @endphp
+
+                    <li class="item {{ $isDone ? 'item--done' : '' }}">
+                        <form method="post" action="{{ route($isDone ? 'incomplete' : 'complete', $listItem->id) }}">
+                            @csrf
+                            <button
+                                class="check"
+                                type="submit"
+                                title="{{ $isDone ? 'Mark as active' : 'Mark as done' }}"
+                                aria-label="{{ $isDone ? 'Mark as active' : 'Mark as done' }}"
+                            ></button>
+                        </form>
+
+                        <span class="item__name">{{ $listItem->name }}</span>
+
+                        <form
+                            method="post"
+                            action="{{ route('remove', $listItem->id) }}"
+                            onsubmit="return confirm('Remove this item?');"
+                        >
+                            @csrf
+                            <button class="btn btn--danger btn--sm" type="submit">Remove</button>
+                        </form>
+                    </li>
+                @empty
+                    <li class="empty">No items yet &mdash; add one below.</li>
+                @endforelse
+            </ul>
+
+            <form class="add-form" method="post" action="{{ route('saveItem') }}">
+                @csrf
+                <label class="sr-only" for="listItem">New item</label>
+                <input
+                    id="listItem"
+                    type="text"
+                    name="listItem"
+                    placeholder="Add a new item&hellip;"
+                    autocomplete="off"
+                    required
+                    autofocus
+                >
+                <button class="btn btn--primary" type="submit">Add</button>
+            </form>
+        </main>
     </body>
 </html>
