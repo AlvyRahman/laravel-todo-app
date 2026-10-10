@@ -17,6 +17,7 @@ use App\Http\Controllers\TodoListController;
 Route::get('/', [TodoListController::class, 'index']);
 Route::post('/saveItem', [TodoListController::class, 'saveItem'])->name('saveItem');
 Route::post('/complete/{id}', [TodoListController::class, 'complete'])->name('complete');
+Route::post('/incomplete/{id}', [TodoListController::class, 'incomplete'])->name('incomplete');
 Route::post('/remove/{id}', [TodoListController::class, 'remove'])->name('remove');
 Route::post('/markAllComplete', [TodoListController::class, 'markAllComplete'])->name('markAllComplete');
 Route::post('/markAllIncomplete', [TodoListController::class, 'markAllIncomplete'])->name('markAllIncomplete');

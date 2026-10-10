@@ -35,6 +35,15 @@ class TodoListController extends Controller
         return redirect('/');
     }
 
+    public function incomplete($id)
+    {
+        $listItem = ListItem::find($id);
+        $listItem->is_complete = 0;
+        $listItem->save();
+
+        return redirect('/');
+    }
+
     /*
     public function editItem($id)
     {
