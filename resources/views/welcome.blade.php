@@ -33,6 +33,22 @@
                 </form>
             </div>
 
+            <form class="search-form" method="get" action="{{ url('/') }}">
+                <label class="sr-only" for="search">Search items</label>
+                <input
+                    id="search"
+                    type="search"
+                    name="search"
+                    value="{{ $search }}"
+                    placeholder="Search items&hellip;"
+                    autocomplete="off"
+                >
+                <button class="btn" type="submit">Search</button>
+                @if ($search)
+                    <a class="btn btn--danger" href="{{ url('/') }}">Clear</a>
+                @endif
+            </form>
+
             <ul class="list">
                 @forelse ($listItems as $listItem)
                     @php $isDone = $listItem->is_complete == 1; @endphp

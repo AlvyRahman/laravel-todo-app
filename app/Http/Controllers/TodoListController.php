@@ -7,9 +7,20 @@ use App\Models\ListItem;
 
 class TodoListController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('welcome', ["listItems" => ListItem::all()]);
+        $search = $request->input('search');
+
+        $listItems = ListItem::query()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        return view('welcome', [
+            "listItems" => $listItems,
+            "search" => $search,
+        ]);
     }
 
     public function saveItem(Request $request)
@@ -21,7 +32,7 @@ class TodoListController extends Controller
         
         // \Log::info(json_encode($request->all()));
         //return view('welcome', ["listItems" => ListItem::all()]);
-        return redirect('/');
+        return redirect()->back();
     }
 
     public function complete($id)
@@ -32,7 +43,7 @@ class TodoListController extends Controller
         $newListItem->is_complete = 1;
         $newListItem->save();
 
-        return redirect('/');
+        return redirect()->back();
     }
 
     public function incomplete($id)
@@ -41,7 +52,7 @@ class TodoListController extends Controller
         $listItem->is_complete = 0;
         $listItem->save();
 
-        return redirect('/');
+        return redirect()->back();
     }
 
     /*
@@ -50,7 +61,7 @@ class TodoListController extends Controller
         // \Log::info($id);
         
      
-        return redirect('/');
+        return redirect()->back();
     } 
     */
 
@@ -61,20 +72,20 @@ class TodoListController extends Controller
         $newListItem = ListItem::find($id);
         $newListItem->delete();
 
-        return redirect('/');
+        return redirect()->back();
     }
 
     public function markAllComplete()
     {
         ListItem::where('is_complete', 0)->update(['is_complete' => 1]);
 
-        return redirect('/');
+        return redirect()->back();
     }
 
     public function markAllIncomplete()
     {   
         ListItem::where('is_complete', 1)->update(['is_complete' => 0]);
 
-        return redirect('/');
+        return redirect()->back();
     }
 }
