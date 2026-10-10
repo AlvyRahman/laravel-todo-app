@@ -49,6 +49,12 @@
                 @endif
             </form>
 
+            @php $q = fn ($v) => request()->fullUrlWithQuery(['status' => $v]); @endphp
+
+            <a href="{{ $q('all') }}"    class="pill {{ $status === 'all' ? 'pill--on' : '' }}">All</a>
+            <a href="{{ $q('active') }}" class="pill {{ $status === 'active' ? 'pill--on' : '' }}">Active</a>
+            <a href="{{ $q('done') }}"   class="pill {{ $status === 'done' ? 'pill--on' : '' }}">Done</a>
+
             <ul class="list">
                 @forelse ($listItems as $listItem)
                     @php $isDone = $listItem->is_complete == 1; @endphp
