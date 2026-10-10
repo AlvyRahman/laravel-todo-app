@@ -111,12 +111,21 @@
                 
                 @foreach ($listItems as $listItem)
                     <div style="display: flex; justify-content: center; align-items: center;">
-                        <p> {{ $listItem->name }} </p>
+                        <p style="{{ $listItem->is_complete ? 'text-decoration: line-through; color: gray;' : '' }}">
+                            {{ $listItem->name }}
+                        </p>
 
-                        <form method="post" action="{{ route('complete', $listItem->id) }}">
-                            {{ csrf_field() }}
-                            <button class="button-4" type="submit" style="margin-left: 20px; color: green;"> Complete </button>
-                        </form>
+                        @if ($listItem->is_complete)
+                            <form method="post" action="{{ route('incomplete', $listItem->id) }}">
+                                {{ csrf_field() }}
+                                <button class="button-4" type="submit" style="margin-left: 20px; color: orange;"> Incomplete </button>
+                            </form>
+                        @else
+                            <form method="post" action="{{ route('complete', $listItem->id) }}">
+                                {{ csrf_field() }}
+                                <button class="button-4" type="submit" style="margin-left: 20px; color: green;"> Complete </button>
+                            </form>
+                        @endif
 
                         <form method="post" action="{{ route('remove', $listItem->id) }}">
                             {{ csrf_field() }}
