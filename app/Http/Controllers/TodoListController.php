@@ -57,15 +57,14 @@ class TodoListController extends Controller
         return redirect()->back();
     }
 
-    /*
-    public function editItem($id)
+    public function edit(Request $request, $id)
     {
-        // \Log::info($id);
-        
-     
+        $listItem = ListItem::findOrFail($id);
+        $listItem->name = $request->listItem;
+        $listItem->save();
+
         return redirect()->back();
     } 
-    */
 
     public function remove($id)
     {

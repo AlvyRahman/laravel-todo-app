@@ -72,7 +72,18 @@
 
                         <span class="item__name">{{ $listItem->name }}</span>
 
+                        <form class="item__edit" method="post" action="{{ route('edit', $listItem->id) }}">
+                            @csrf
+                            @method('PUT')
+                            <input type="text" name="listItem" value="{{ $listItem->name }}" required>
+                            <button class="btn btn--primary btn--sm" type="submit">Save</button>
+                            <button class="btn btn--sm" type="button" onclick="cancelEdit(this)">Cancel</button>
+                        </form>
+
+                        <button class="btn btn--primary btn--sm edit-btn" type="button" onclick="startEdit(this)">Edit</button>
+
                         <form
+                            class="item__remove"
                             method="post"
                             action="{{ route('remove', $listItem->id) }}"
                             onsubmit="return confirm('Remove this item?');"

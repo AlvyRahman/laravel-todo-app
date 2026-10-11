@@ -21,4 +21,4 @@ Route::post('/incomplete/{id}', [TodoListController::class, 'incomplete'])->name
 Route::post('/remove/{id}', [TodoListController::class, 'remove'])->name('remove');
 Route::post('/markAllComplete', [TodoListController::class, 'markAllComplete'])->name('markAllComplete');
 Route::post('/markAllIncomplete', [TodoListController::class, 'markAllIncomplete'])->name('markAllIncomplete');
-//Route::post('/editItem/{id}', [TodoListController::class, 'editItem'])->name('editItem');
+Route::put('/edit/{id}', [TodoListController::class, 'edit'])->name('edit');
