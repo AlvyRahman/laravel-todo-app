@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoListController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +19,7 @@ Route::post('/saveItem', [TodoListController::class, 'saveItem'])->name('saveIte
 Route::post('/complete/{id}', [TodoListController::class, 'complete'])->name('complete');
 Route::post('/incomplete/{id}', [TodoListController::class, 'incomplete'])->name('incomplete');
 Route::post('/remove/{id}', [TodoListController::class, 'remove'])->name('remove');
+Route::post('/restore/{id}', [TodoListController::class, 'restore'])->name('restore');
 Route::post('/markAllComplete', [TodoListController::class, 'markAllComplete'])->name('markAllComplete');
 Route::post('/markAllIncomplete', [TodoListController::class, 'markAllIncomplete'])->name('markAllIncomplete');
 Route::put('/edit/{id}', [TodoListController::class, 'edit'])->name('edit');

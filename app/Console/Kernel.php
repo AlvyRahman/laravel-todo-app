@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Permanently delete items whose undo window has passed.
+        $schedule->command('model:prune')->everyMinute();
     }
 
     /**

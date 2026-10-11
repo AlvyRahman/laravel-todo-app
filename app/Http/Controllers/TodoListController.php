@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\ListItemRequest;
 use App\Models\ListItem;
+use Illuminate\Http\Request;
 
 class TodoListController extends Controller
 {
@@ -14,15 +14,15 @@ class TodoListController extends Controller
         $status = $request->input('status', 'all');
 
         $listItems = ListItem::query()
-            ->when($search, fn ($query, $search) => $query->where('name', 'like', '%' . $search . '%'))
+            ->when($search, fn ($query, $search) => $query->where('name', 'like', '%'.$search.'%'))
             ->when($status === 'active', fn ($query) => $query->where('is_complete', 0))
             ->when($status === 'done', fn ($query) => $query->where('is_complete', 1))
             ->get();
 
         return view('welcome', [
-            "listItems" => $listItems,
-            "search" => $search,
-            "status" => $status
+            'listItems' => $listItems,
+            'search' => $search,
+            'status' => $status,
         ]);
     }
 
@@ -32,7 +32,7 @@ class TodoListController extends Controller
         $newListItem->name = $request->validated('listItem');
         $newListItem->is_complete = 0;
         $newListItem->save();
-        
+
         // \Log::info(json_encode($request->all()));
         //return view('welcome', ["listItems" => ListItem::all()]);
         return redirect()->back();
@@ -41,7 +41,7 @@ class TodoListController extends Controller
     public function complete($id)
     {
         // \Log::info($id);
-        
+
         $newListItem = ListItem::find($id);
         $newListItem->is_complete = 1;
         $newListItem->save();
@@ -65,14 +65,22 @@ class TodoListController extends Controller
         $listItem->save();
 
         return redirect()->back();
-    } 
+    }
 
     public function remove($id)
     {
-        // \Log::info($id);
-        
-        $newListItem = ListItem::find($id);
-        $newListItem->delete();
+        $listItem = ListItem::findOrFail($id);
+        $listItem->delete();
+
+        return redirect()->back()->with('undo', [
+            'id' => $listItem->id,
+            'name' => $listItem->name,
+        ]);
+    }
+
+    public function restore($id)
+    {
+        ListItem::onlyTrashed()->findOrFail($id)->restore();
 
         return redirect()->back();
     }
@@ -85,7 +93,7 @@ class TodoListController extends Controller
     }
 
     public function markAllIncomplete()
-    {   
+    {
         ListItem::where('is_complete', 1)->update(['is_complete' => 0]);
 
         return redirect()->back();

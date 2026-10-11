@@ -90,7 +90,6 @@
                             class="item__remove"
                             method="post"
                             action="{{ route('remove', $listItem->id) }}"
-                            onsubmit="return confirm('Remove this item?');"
                         >
                             @csrf
                             <button class="btn btn--danger btn--sm" type="submit">Remove</button>
@@ -117,5 +116,24 @@
                 <button class="btn btn--primary" type="submit">Add</button>
             </form>
         </main>
+
+        @if (session('undo'))
+            @php $undoSeconds = \App\Models\ListItem::UNDO_SECONDS; @endphp
+
+            <div class="toast" id="undo-toast">
+                <span class="toast__text">&ldquo;{{ session('undo.name') }}&rdquo; deleted</span>
+
+                <form method="post" action="{{ route('restore', session('undo.id')) }}">
+                    @csrf
+                    <button class="btn btn--primary btn--sm" type="submit">Undo</button>
+                </form>
+
+                <span class="toast__bar" style="animation-duration: {{ $undoSeconds }}s"></span>
+            </div>
+
+            <script>
+                setTimeout(() => document.getElementById('undo-toast')?.remove(), {{ $undoSeconds * 1000 }});
+            </script>
+        @endif
     </body>
 </html>
