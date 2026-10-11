@@ -61,6 +61,17 @@ body {
     white-space: nowrap;
 }
 
+.form-error {
+    margin: 14px 0 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--danger);
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+}
+
 .toolbar {
     display: flex;
     gap: 8px;

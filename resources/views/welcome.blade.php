@@ -21,6 +21,10 @@
                 <span class="app__counter">{{ $active }} active &middot; {{ $done }} done</span>
             </header>
 
+            @error('listItem')
+                <p class="form-error">{{ $message }}</p>
+            @enderror
+
             <div class="toolbar">
                 <form method="post" action="{{ route('markAllComplete') }}">
                     @csrf
@@ -104,6 +108,7 @@
                     id="listItem"
                     type="text"
                     name="listItem"
+                    value="{{ old('listItem') }}"
                     placeholder="Add a new item&hellip;"
                     autocomplete="off"
                     required

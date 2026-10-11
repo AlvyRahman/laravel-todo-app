@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ListItemRequest;
 use App\Models\ListItem;
 
 class TodoListController extends Controller
@@ -25,10 +26,10 @@ class TodoListController extends Controller
         ]);
     }
 
-    public function saveItem(Request $request)
+    public function saveItem(ListItemRequest $request)
     {
         $newListItem = new ListItem;
-        $newListItem->name = $request->listItem;
+        $newListItem->name = $request->validated('listItem');
         $newListItem->is_complete = 0;
         $newListItem->save();
         
@@ -57,10 +58,10 @@ class TodoListController extends Controller
         return redirect()->back();
     }
 
-    public function edit(Request $request, $id)
+    public function edit(ListItemRequest $request, $id)
     {
         $listItem = ListItem::findOrFail($id);
-        $listItem->name = $request->listItem;
+        $listItem->name = $request->validated('listItem');
         $listItem->save();
 
         return redirect()->back();
